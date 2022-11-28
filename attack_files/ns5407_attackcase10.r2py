@@ -1,0 +1,37 @@
+if "testfile.txt" in listfiles():
+  removefile("testfile.txt")
+
+myfile=openfile("testfile.txt",True)  #Create a file
+
+#testing multiple read, write to check is lock is released properly
+# Lock isn't released properly the code execution will be stuck
+
+try:
+	myfile.writeat("12345", 1) # Seek EOF error
+except:
+	pass
+
+try:
+	myfile.writeat("12345\n\n", 0) # strict append with two '\n'
+except:
+	pass
+
+try:
+	myfile.writeat("12345", 0) # strict append with no '\n'
+	assert("12345" == myfile.readat(None,0)) # this location should contain a intendation as strictly append
+except:
+	log("Error 10")
+try:
+	myfile.writeat("12345\n", 5) # strict append with one '\n'
+	assert("1234512345\n    " == myfile.readat(None,0)) # The file should have the follwing content
+except:
+	log("Error 10_2")
+
+try:
+	myfile.writeat("12345\n", 0) # overwrite with one '\n'
+	assert("12345\n2345\n    " == myfile.readat(None,0)) # The file should have the follwing content
+except:
+	log("Error 10_3")
+
+
+myfile.close()

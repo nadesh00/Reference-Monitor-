@@ -1,0 +1,17 @@
+if "testfile.txt" in listfiles():
+  removefile("testfile.txt")
+
+myfile=openfile("testfile.txt",True)  #Create a file
+
+try:
+	myfile.writeat("12345\n\n", 0) # strict append with two '\n'
+	log("Case 8- no error logged - error supression for two \\n in strict append")
+	assert("" == myfile.readat(None,0)) # the file should have no data in it
+except Exception as err:
+	if type(err) != RepyArgumentError:
+		log("Case 8 - wrong error type - error for two \\n in strict append")
+	elif type(err) == AssertionError:
+		log("Case 8- wrongly handled two \n case in strict append")
+
+myfile.close()
+

@@ -1,0 +1,28 @@
+# proper locking and unlocking will safegaurd against this test
+# there will be cases where double lock error or EoF could occur
+
+try:
+	if "testfile.txt" in listfiles():
+		removefile("testfile.txt")
+	myfile=openfile("testfile.txt",True)  #Create a file
+	def thread1():
+		for i in range(100):
+			myfile.writeat("1", i)
+	def thread2():
+		for i in range(1,101):
+			myfile.writeat("2", i)
+	def thread3():
+		for i in range(1,100):
+			myfile.readat(1, i)
+	createthread(thread1)
+	createthread(thread2)
+	createthread(thread2)
+	sleep(1)
+	myfile.close()
+
+except Expection as err:
+	if type(err) == LockDoubleReleaseError:
+		log("Double Release of Lock Error")
+	else:
+		raise err
+
