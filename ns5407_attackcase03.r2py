@@ -1,0 +1,14 @@
+if "testfile.txt" in listfiles():
+  removefile("testfile.txt")
+
+myfile=openfile("testfile.txt",True)  #Create a file
+
+try:
+	myfile.writeat("12345", 0) # strict append with no '\n'
+	myfile.writeat("1234567890\n1", 5) # strict append with '\n'
+	myfile.writeat("12345678901234567890\n\n", 5) # overwrite with two \n
+	assert("12345678901234567890\n\n"==myfile.readat(25,5)) # this location should contain a intendation
+except:
+	log("Error 3")
+
+myfile.close()
